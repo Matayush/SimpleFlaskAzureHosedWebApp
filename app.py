@@ -1,10 +1,8 @@
+<<EOL
 from flask import Flask
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello World!\n"
-
-    
-if __name__ == "__main__":
-    app.run(debug=True)
+    return "<html><body><h1>Hello Best Bike App!</h1></body></html>\n"
+EOL
