@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoLog | Car Maintenance Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container shell header-row">
+      <div class="brand">
+        <svg aria-label="AutoLog logo" viewBox="0 0 64 64" role="img">
+          <rect x="8" y="18" width="48" height="22" rx="11" fill="none" stroke="currentColor" stroke-width="4"></rect>
+          <path d="M18 40l5-10h18l5 10" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+          <circle cx="22" cy="44" r="4" fill="currentColor"></circle>
+          <circle cx="42" cy="44" r="4" fill="currentColor"></circle>
+        </svg>
+        <div>
+          <p class="eyebrow">Flask project</p>
+          <strong>AutoLog</strong>
+        </div>
+      </div>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme"></button>
+    </div>
+  </header>
+
+  <main id="main" class="container shell page-grid">
+    <section class="hero panel hero-panel">
+      <div>
+        <p class="eyebrow">Maintenance tracker</p>
+        <h1>Track service history app.</h1>
+        <p class="lede">A compact Flask web app for logging repairs, upcoming maintenance, mileage, and running cost in one clean dashboard.</p>
+      </div>
+      <div class="hero-meta">
+        <div class="metric-card accent-card">
+          <span class="metric-label">Current vehicle</span>
+          <strong>{{ vehicle.name }}</strong>
+          <span>{{ vehicle.model_year }} · {{ vehicle.plate }}</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Mileage</span>
+          <strong>{{ '{:,}'.format(vehicle.current_mileage) }} km</strong>
+          <span>Updated from latest service entry</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="panel metric-card">
+        <span class="metric-label">Completed</span>
+        <strong>{{ completed_count }}</strong>
+        <span>Logged services</span>
+      </article>
+      <article class="panel metric-card">
+        <span class="metric-label">Planned</span>
+        <strong>{{ planned_count }}</strong>
+        <span>Upcoming jobs</span>
+      </article>
+      <article class="panel metric-card">
+        <span class="metric-label">Total cost</span>
+        <strong>{{ '%.2f'|format(total_cost) }} PLN</strong>
+        <span>Across all entries</span>
+      </article>
+      <article class="panel metric-card">
+        <span class="metric-label">Next service</span>
+        <strong>{% if next_service %}{{ next_service.service }}{% else %}No pending work{% endif %}</strong>
+        <span>{% if next_service %}{{ next_service.date }}{% else %}Everything up to date{% endif %}</span>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <section class="panel form-panel">
+        <div class="section-head">
+          <p class="eyebrow">New entry</p>
+          <h2>Add maintenance item</h2>
+        </div>
+        <form method="post" action="{{ url_for('add_entry') }}" class="entry-form">
+          <label>
+            <span>Service</span>
+            <input type="text" name="service" placeholder="For example: Rear shocks" required>
+          </label>
+          <label>
+            <span>Date</span>
+            <input type="date" name="date" required>
+          </label>
+          <div class="split">
+            <label>
+              <span>Mileage</span>
+              <input type="number" name="mileage" min="0" step="1" placeholder="Enter the mileage" required>
+            </label>
+            <label>
+              <span>Cost (PLN)</span>
+              <input type="number" name="cost" min="0" step="1" placeholder="Enter the amount">
+            </label>
+          </div>
+          <label>
+            <span>Status</span>
+            <select name="status">
+              <option>Completed</option>
+              <option>Planned</option>
+            </select>
+          </label>
+          <label>
+            <span>Notes</span>
+            <textarea name="notes" rows="4" placeholder="Parts, observations, reminders..."></textarea>
+          </label>
+          <button type="submit" class="button-primary">Save entry</button>
+        </form>
+      </section>
+
+      <section class="panel log-panel">
+        <div class="section-head">
+          <p class="eyebrow">Service log</p>
+          <h2>Recent entries</h2>
+        </div>
+        <div class="entries">
+          {% for entry in entries %}
+          <article class="entry-card">
+            <div class="entry-topline">
+              <h3>{{ entry.service }}</h3>
+              <span class="status-badge {{ entry.status|lower }}">{{ entry.status }}</span>
+            </div>
+            <dl class="entry-meta">
+              <div><dt>Date</dt><dd>{{ entry.date }}</dd></div>
+              <div><dt>Mileage</dt><dd>{{ '{:,}'.format(entry.mileage) }} km</dd></div>
+              <div><dt>Cost</dt><dd>{{ '%.2f'|format(entry.cost) }} PLN</dd></div>
+            </dl>
+            <p>{{ entry.notes }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const toggle=document.querySelector('[data-theme-toggle]');
+      const root=document.documentElement;
+      let theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+      const render=()=>{
+        root.setAttribute('data-theme',theme);
+        toggle.innerHTML=theme==='dark'
+          ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+          : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      };
+      render();
+      toggle.addEventListener('click',()=>{theme=theme==='dark'?'light':'dark';render();});
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "vehicle": {
+    "name": "BMW E91 Touring",
+    "model_year": 2006,
+    "plate": "KK 76747",
+    "current_mileage": 2454565
+  },
+  "entries": [
+    {
+      "id": 1,
+      "service": "Engine oil and filter",
+      "date": "2026-05-20",
+      "mileage": 184900,
+      "cost": 420,
+      "status": "Completed",
+      "notes": "Changed oil, oil filter, cabin filter."
+    },
+    {
+      "id": 2,
+      "service": "Rear suspension refresh",
+      "date": "2026-06-30",
+      "mileage": 186800,
+      "cost": 1800,
+      "status": "Planned",
+      "notes": "Subframe check, bump stops, rollers, rear shocks."
+    },
+    {
+      "id": 3,
+      "service": "Brake fluid service",
+      "date": "2026-04-11",
+      "mileage": 183100,
+      "cost": 230,
+      "status": "Completed",
+      "notes": "Brake fluid flush and quick brake inspection."
+    },
+    {
+      "id": 4,
+      "service": "qwfqefqef",
+      "date": "2026-06-16",
+      "mileage": 2454565,
+      "cost": 0.0,
+      "status": "Completed",
+      "notes": "efqneflihe"
+    },
+    {
+      "id": 5,
+      "service": "fw",
+      "date": "2026-06-08",
+      "mileage": 187999,
+      "cost": 400.0,
+      "status": "Planned",
+      "notes": "ef"
+    }
+  ]
+}
