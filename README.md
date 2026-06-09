@@ -47,5 +47,13 @@ autolog-flask/
 - Filter by completed or planned items
 - Add cost charts and monthly summaries
 
+## Screenshots
+
+### Appss1-Front Page
+![Front page](.github/assets/Appss1.jpg)
+
+### Appss2- Dark Mode On
+![DarkModeOn](.github/assets/Appss2-darkmodeon.jpg)
+
 ## License
 MIT
